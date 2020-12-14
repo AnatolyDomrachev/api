@@ -1,1 +1,2 @@
 developer.spotify.com/documentation/web-api/libraries/
+https://developer.spotify.com/console/get-users-profile/

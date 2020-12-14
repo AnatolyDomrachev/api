@@ -81,7 +81,7 @@ def main():
             API_get_albums(album_ids[idx: idx+20], album_data)
             time.sleep(0.3)    
         
-''' 
+        
         df1 = pd.DataFrame(ltrack, columns=col1)
         
         df2 = pd.DataFrame(audioF, columns=col2) 
@@ -100,7 +100,6 @@ def main():
         
         print ('finish')
         print (query)
-''' 
 
 def API_search_request(keywords, search_type, results_limit, results_offset, ltrack, song_ids, artist_ids, album_ids):
 
@@ -109,14 +108,17 @@ def API_search_request(keywords, search_type, results_limit, results_offset, ltr
 
     url = 'https://api.spotify.com/v1/search?q=year:'+ keywords +'&type=' + search_type +'&offset='+ off +'&limit=' + lim
 
- 
-    access_token = ( 'Bearer BQA5pi8lsJOPpvSPBYnX99N_8z2KL-5uniilECprwCI0D22yiegWSI5ExZyZ-GPqf48JGnzFHN__ap3qs0f_ToIXZ6zkg3EM09LZHBHLNa81_kHMytDMLIvX9CZOtGfPe68PuTRGH_JFwpNwtQXwo5AlvQG2R5DnkF4mHI-3dE2E37ETYHCIQCY61vnuBGvILsITcwi6MW8DdCDQ3f8vElJv69tgsb8HupGjnlErICycSUt8qB1XsFh08tm1VjO3saqpQCoLLCJwzZ8IEIvsm3KQ2NqGdmLRLHo')
-    
-    r = requests.get(url, headers={"Accept": "application/json" , "Authorization": access_token})
-    
+    r = requests.get(url)
+
+    if r: 
+       j = r.json()
+    else:
+      return r
 
 
-#    r = requests.get(url)
+    litem = j['tracks']['items']
+    #print(len(ll))
+    try:
 
     if r: 
        j = r.json()
@@ -262,8 +264,4 @@ def API_get_albums(album_ids, album_data):
     
     except:
         ValueError
-
-
-if __name__ == '__main__':
-    main()
 
