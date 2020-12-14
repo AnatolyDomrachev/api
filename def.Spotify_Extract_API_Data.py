@@ -12,9 +12,11 @@ print('start..')
 
 def main():
     
-    #queries = ['1995','1996','1997','1998','1999','2000','2001',
-              #'2002','2003','2004','2005','2006','2007','2008',
-              #'2009','2010','2011','2012','2013','2014','2015','2016','2017']
+    '''
+    queries = ['1995','1996','1997','1998','1999','2000','2001',
+              '2002','2003','2004','2005','2006','2007','2008',
+              '2009','2010','2011','2012','2013','2014','2015','2016','2017']
+  '''
               
     queries = ['2017']
     # Query and request from API are different!
@@ -80,21 +82,21 @@ def main():
             time.sleep(0.3)    
         
         
-        #df1 = pd.DataFrame(ltrack, columns=col1)
+        df1 = pd.DataFrame(ltrack, columns=col1)
         
-        #df2 = pd.DataFrame(audioF, columns=col2) 
+        df2 = pd.DataFrame(audioF, columns=col2) 
         
         
-        #df3 = pd.DataFrame(artist_data, columns=col3)
+        df3 = pd.DataFrame(artist_data, columns=col3)
         
-        #df4 = pd.DataFrame(album_data, columns=col4)
+        df4 = pd.DataFrame(album_data, columns=col4)
         
-        #df = df1.merge(df2, on='song_id', how='outer').merge(df3, on='artist_id', how='outer').merge(
-             #df4, on='album_id', how='outer')
+        df = df1.merge(df2, on='song_id', how='outer').merge(df3, on='artist_id', how='outer').merge(
+             df4, on='album_id', how='outer')
         
         filename = query + '.csv'                      
         
-        #df.to_csv(filename, sep='\t')
+        df.to_csv(filename, sep='\t')
         
         print ('finish')
         print (query)
@@ -106,9 +108,17 @@ def API_search_request(keywords, search_type, results_limit, results_offset, ltr
 
     url = 'https://api.spotify.com/v1/search?q=year:'+ keywords +'&type=' + search_type +'&offset='+ off +'&limit=' + lim
 
-    #r = requests.get(url)
-    access_token = (  'Bearer BQCzaeu-bTXIuhBe9wq9qztMBnaq4XqlolgQCdMJNEoEdn02OfV0tSH7I-gO3cAeV5ZqOhl4g2-KYN40ynJCIMNJTpMexdti5ugPGFcD5FGBaV615iAf2zVc4H2U-LTuYmilXlpJ23zCBWa6UnhEYcoeBqrJ2Ss2cWk2AjkFvtsuLrQTn8thkrvBrE2tqAWsiNuygS7ICwnvCt4iVChTt9kSPsjUrT7zCdDuONzdB3G8o-VK7NqitqTGz0V6pYkoQmccLhKtbb3M4wMmfY5SGv9qjcTlmeYfkjI')
-    r = requests.get(url, headers={"Accept": "application/json" , "Authorization": access_token})
+    r = requests.get(url)
+
+    if r: 
+       j = r.json()
+    else:
+      return r
+
+
+    litem = j['tracks']['items']
+    #print(len(ll))
+    try:
 
     if r: 
        j = r.json()
@@ -161,9 +171,8 @@ def API_get_audio_feature(songids, audioF):
 
     url = 'https://api.spotify.com/v1/audio-features?ids=' + track_ids  
     ## access_token will expire soon
-    #access_token = (  'Bearer BQDAZNalQ6KCd8pRM0Exu3D-tzdeodFYL86pdq8kz' 'qN8i5gqeLMNeCgyPmZ1B3mgQ2YGd29tL06jxeNzOMkhmi4GM' 'QQLQ_ZfQUroBMRSMj10IOjEo-cX7YsfzH_v3eUlN4wXgDd4z' 'njNqrPu-MI9qRz3_jyb44urQ7J5TeOeWk4kvHKfD36TplacQ' 'DeYJe49DsaAQWuCSe5kdt1r7r0GqugSH85vOaa5qrqMaGbKM' 'DnZ-2aWzuLUE37Vh3U2MR3VEdgHPIxlQtC_vfTBwiMZZcY55' 'Q1aZuKSrGL9A6MC2hUi4CgRMD1mXwE9l8bLJQ') 
-
-    access_token = (  'Bearer BQCzaeu-bTXIuhBe9wq9qztMBnaq4XqlolgQCdMJNEoEdn02OfV0tSH7I-gO3cAeV5ZqOhl4g2-KYN40ynJCIMNJTpMexdti5ugPGFcD5FGBaV615iAf2zVc4H2U-LTuYmilXlpJ23zCBWa6UnhEYcoeBqrJ2Ss2cWk2AjkFvtsuLrQTn8thkrvBrE2tqAWsiNuygS7ICwnvCt4iVChTt9kSPsjUrT7zCdDuONzdB3G8o-VK7NqitqTGz0V6pYkoQmccLhKtbb3M4wMmfY5SGv9qjcTlmeYfkjI')
+   
+    access_token = ( 'Bearer BQA5pi8lsJOPpvSPBYnX99N_8z2KL-5uniilECprwCI0D22yiegWSI5ExZyZ-GPqf48JGnzFHN__ap3qs0f_ToIXZ6zkg3EM09LZHBHLNa81_kHMytDMLIvX9CZOtGfPe68PuTRGH_JFwpNwtQXwo5AlvQG2R5DnkF4mHI-3dE2E37ETYHCIQCY61vnuBGvILsITcwi6MW8DdCDQ3f8vElJv69tgsb8HupGjnlErICycSUt8qB1XsFh08tm1VjO3saqpQCoLLCJwzZ8IEIvsm3KQ2NqGdmLRLHo')
     
     r = requests.get(url, headers={"Accept": "application/json" , "Authorization": access_token})
     
@@ -255,8 +264,4 @@ def API_get_albums(album_ids, album_data):
     
     except:
         ValueError
-
-
-if __name__ == '__main__':
-    main()
 
